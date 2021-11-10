@@ -1,8 +1,9 @@
-import firebase from "firebase/compat/app";
+import firebase from "firebase/compat/app"; //yarn add firebase
 
-import "firebase/compat/auth";
-import "firebase/compat/database";
+import "firebase/compat/auth"; //para a autenticação
+import "firebase/compat/database"; //para o banco de dados
 
+//configuração do firebase, que nós é mostrada quando criamos um projeto novo no próprio firebase. Estou usando process.env para que as credenciais não fiquem hard coded, e coloco o nome da variável de ambiente, que está vindo pelo meu .env.local, que não está disponível no gh justamente por segurança
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,

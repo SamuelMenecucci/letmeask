@@ -8,6 +8,7 @@
 
     background: #865afd;
 
+    display: flex;
     flex-direction: column;
     justify-content: center;
 
@@ -32,7 +33,7 @@
   }
 
   main {
-    flex: 9;
+    flex: 8;
 
     padding: 0 32px;
 
@@ -51,7 +52,7 @@
     align-items: stretch;
     text-align: center;
 
-    //uso o > para pegar o filho direto do main-content. se não usasse ele, a imagem do google também iria seguir a mesma estilização, que seria o stretch.A propriedade CSS align-self alinha itens-flex da linha flex alvo, sobreescrevendo o valor align-items.
+    //uso o > para pegar o filho direto do main-content. se não usasse ele, a imagem do google também iria seguir a mesma estilização, que seria o stretch.A propriedade CSS align-self alinha itens-flex da linha flex alvo, sobre escrevendo o valor align-items.
     > img {
       align-self: center;
     }

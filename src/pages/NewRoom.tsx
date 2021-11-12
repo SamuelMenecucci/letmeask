@@ -1,12 +1,44 @@
 import illustrationImg from "../assets/images/illustration.svg";
 import logoImg from "../assets/images/logo.svg";
 import { Button } from "../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+
+//chamo o formEvent para passar ele como o que eu iria utilizar para tipar o evento que estou recebendo na minha função.
+import { FormEvent, useState } from "react";
 
 import "../styles/auth.scss";
+import { database } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
 
 export function NewRoom() {
-  // const { user } = useContext(authContext);
+  //crio um estado que será utilizado para armazenar as informações do meu input, no formulário
+  const [newRoom, setNewRoom] = useState("");
+  const { user } = useAuth();
+
+  //para redirecionarmos a rota e renderizarmos outro componente.
+  const history = useHistory();
+
+  //função para pegar o evento de enviar do meu formulário, o onSubmit.
+  async function handleCreateNewRoom(event: FormEvent) {
+    // const { user } = useContext(authContext);
+    event.preventDefault();
+
+    //verifico o conteudo do newRoom, que está recebendo o valor do input. dou um trim() para retirar os espaços vazios no inicio e no fim de um texto e verifico se tem algum conteudo, para evitar que o usuário tenha colocado apenas espaços dentro do input, e não deixo ele criar uma sala sem nome
+    if (newRoom.trim() === "") {
+      return;
+    }
+    //crio dentro do firebase uma referencia, que será uma entidade chamada rooms
+    const roomRef = database.ref("room");
+
+    //dentro dessa referencia, eu adiciono os dados que eu quero que sejam gravados no banco de dados.
+    const firebaseRoom = await roomRef.push({
+      title: newRoom,
+      authorId: user?.id,
+    });
+
+    //passando como parametro da rota o id que foi criado com a adição da sala dentro do nosso banco de dados. esse será o id que iremos utilizar para a criação das salas.
+    history.push(`/rooms/${firebaseRoom.key}`);
+  }
 
   return (
     <div id="page-auth">
@@ -26,8 +58,13 @@ export function NewRoom() {
           <img src={logoImg} alt="Letmeask" />
           <h2>Criar uma nova sala</h2>
 
-          <form action="">
-            <input type="text" placeholder="Nome da sala " />
+          <form onSubmit={handleCreateNewRoom}>
+            <input
+              type="text"
+              onChange={(event) => setNewRoom(event.target.value)}
+              value={newRoom}
+              placeholder="Nome da sala "
+            />
             <Button type="submit">Criar sala</Button>
           </form>
           <p>

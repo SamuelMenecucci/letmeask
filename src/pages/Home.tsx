@@ -8,6 +8,7 @@ import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import { FormEvent, useState } from "react";
 import { database } from "../services/firebase";
+import toast from "react-hot-toast";
 
 export function Home() {
   //para fazer o redirecionamento para outra página
@@ -43,7 +44,7 @@ export function Home() {
     //TODO Não está entrando nessa condição
     //se a room não existir
     if (!roomRef.exists()) {
-      alert("Room does not exists.");
+      toast.error("Room does not exists.");
       return;
     }
 

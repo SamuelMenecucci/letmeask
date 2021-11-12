@@ -28,7 +28,7 @@ export function NewRoom() {
       return;
     }
     //crio dentro do firebase uma referencia, que será uma entidade chamada rooms
-    const roomRef = database.ref("room");
+    const roomRef = database.ref("rooms");
 
     //dentro dessa referencia, eu adiciono os dados que eu quero que sejam gravados no banco de dados.
     const firebaseRoom = await roomRef.push({

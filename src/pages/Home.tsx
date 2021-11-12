@@ -40,14 +40,14 @@ export function Home() {
     //busco dentro de rooms o id que o usuário digitou, e dou um .get para me retornar os dados.
     const roomRef = await database.ref(`rooms/${roomCode}`).get();
 
-    console.log(roomRef);
-
+    //TODO Não está entrando nessa condição
     //se a room não existir
     if (!roomRef.exists()) {
       alert("Room does not exists.");
       return;
     }
 
+    //passando o id da sala que existe como parametro na rota.
     history.push(`/rooms/${roomCode}`);
   }
 

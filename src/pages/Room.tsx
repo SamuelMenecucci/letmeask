@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import "../styles/room.scss";
 import { FormEvent, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { database } from "../services/firebase";
 
 //tipagem do parametro que irei pegar
 type RoomParams = {
@@ -25,7 +26,7 @@ export function Room() {
 
   const [newQuestion, setNewQuestion] = useState("");
 
-  function handleSendNewQuestion(event: FormEvent) {
+  async function handleSendNewQuestion(event: FormEvent) {
     event.preventDefault();
 
     if (newQuestion.trim() === "") {
@@ -35,9 +36,25 @@ export function Room() {
     if (!user) {
       toast.error("You must be logged in");
     }
+
+    //objeto que vai ter todas as informações da pergunta que será criada
+    const question = {
+      content: newQuestion, //estado que armazena a pergunta, pegando do input do form
+      author: {
+        name: user?.name,
+        avatar: user?.avatar,
+      },
+      isHighlighted: false,
+      isAnswered: false,
+    };
+
+    //salvo dentro do firebase, no id da sala, criando uma nova informação chamada questions
+    await database.ref(`rooms/${roomId}/questions`).push(question);
+
+    //para setar o input como vazio após ela ser feita
+    setNewQuestion("");
   }
 
-  console.log(params);
   return (
     <div id="page-room">
       <header>
@@ -61,10 +78,21 @@ export function Room() {
           />
 
           <div className="form-footer">
-            <span>
-              Para enviar uma pergunta, <button>faça seu login</button>
-            </span>
-            <Button type="submit">Enviar pergunta</Button>
+            {/* Dentro do react, para fazer um if, utilizo o operador ternário. aqui, faço condições de exibição para caso o usuário esteja logado ou não. se estiver, mostro o avatar e o nome, caso não, mostro a frase para ele fazer login */}
+            {user ? (
+              <div className="user-info">
+                <img src={user.avatar} alt={user.name} />
+                <span> {user.name} </span>
+              </div>
+            ) : (
+              <span>
+                {" "}
+                Para enviar uma pergunta, <button>faça seu login</button>
+              </span>
+            )}
+            <Button type="submit" disabled={!user}>
+              Enviar pergunta
+            </Button>
           </div>
         </form>
       </main>

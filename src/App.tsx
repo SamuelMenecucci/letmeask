@@ -24,7 +24,7 @@ export function App() {
           <Route path="/admin/rooms/:id" component={AdminRoom}></Route>
         </Switch>
         {/* para utilizar o toast, precisa passar o componente no app */}
-        <Toaster />;
+        <Toaster />
       </AuthContextProvider>
     </BrowserRouter>
   );

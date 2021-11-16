@@ -8,6 +8,7 @@ import { Room } from "./pages/Room";
 
 //yarn add react-hot-toast
 import { Toaster } from "react-hot-toast";
+import { AdminRoom } from "./pages/AdminRoom";
 
 export function App() {
   return (
@@ -19,6 +20,8 @@ export function App() {
           <Route path="/" exact component={Home}></Route>
           <Route path="/rooms/new" exact component={NewRoom}></Route>
           <Route path="/rooms/:id" component={Room}></Route>
+
+          <Route path="/admin/rooms/:id" component={AdminRoom}></Route>
         </Switch>
         {/* para utilizar o toast, precisa passar o componente no app */}
         <Toaster />;

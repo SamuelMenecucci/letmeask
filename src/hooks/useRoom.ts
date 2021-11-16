@@ -12,7 +12,7 @@ type FirebaseQuestions = Record<
     };
     content: string;
     isAnswered: boolean;
-    isHithlighted: boolean;
+    isHighlighted: boolean;
     likes: Record<
       string,
       {
@@ -71,7 +71,7 @@ export function useRoom(roomId: string) {
             id: key,
             content: value.content,
             author: value.author,
-            isHighlighted: value.isHithlighted,
+            isHighlighted: value.isHighlighted,
             isAnswered: value.isAnswered,
 
             //para ver a quantidade de likes que a pergunta possui.

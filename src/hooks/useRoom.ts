@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { database } from "../services/firebase";
+import { useAuth } from "./useAuth";
 
 //para declarar a tipagem de um objeto no typescript, utilizo o Record.a primeira posição é a chave e a segunda é o value
 type FirebaseQuestions = Record<
@@ -12,6 +13,12 @@ type FirebaseQuestions = Record<
     content: string;
     isAnswered: boolean;
     isHithlighted: boolean;
+    likes: Record<
+      string,
+      {
+        authorId: string;
+      }
+    >;
   }
 >;
 
@@ -25,11 +32,15 @@ type QuestionType = {
   content: string;
   isAnswered: boolean;
   isHighlighted: boolean;
+  likeCount: number;
+  likeId: string | undefined;
 };
 
 //criação de um hook para a reutilização de suas funcionalidades em outras partes da aplicação.
 //hook para pegar as questões existentes no banco de dados.
 export function useRoom(roomId: string) {
+  const { user } = useAuth();
+
   //o estado será um array de questions
   const [questions, setQuestions] = useState<QuestionType[]>([]);
 
@@ -62,13 +73,24 @@ export function useRoom(roomId: string) {
             author: value.author,
             isHighlighted: value.isHithlighted,
             isAnswered: value.isAnswered,
+
+            //para ver a quantidade de likes que a pergunta possui.
+            likeCount: Object.values(value.likes ?? {}).length,
+
+            // par ver se o usuário já deu like na pergunta ou não.
+            likeId: Object.entries(value.likes ?? {}).find(
+              ([key, like]) => like.authorId === user?.id
+            )?.[0],
           };
         }
       );
       setTitle(databaseRoom.title);
       setQuestions(parsedQuestions);
     });
-  }, [roomId]);
+
+    //para desativar os listeners que eu possuo utilizando uma funcionalidade do próprio firebase
+    return () => roomRef.off("value");
+  }, [roomId, user?.id]);
 
   return { questions, title };
 }

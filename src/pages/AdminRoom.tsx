@@ -2,12 +2,15 @@ import logoImg from "../assets/images/logo.svg";
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 
+import deleteImg from "../assets/images/delete.svg";
+
 //função do router para pegar os parametros da rota
 import { useParams } from "react-router-dom";
 import "../styles/room.scss";
 // import { useAuth } from "../hooks/useAuth";
 import { Question } from "../components/Question";
 import { useRoom } from "../hooks/useRoom";
+import { database } from "../services/firebase";
 
 //tipagem do parametro que irei pegar
 type RoomParams = {
@@ -26,6 +29,15 @@ export function AdminRoom() {
 
   //informações de dentro do hook que criei
   const { questions, title } = useRoom(roomId);
+
+  async function handleDeleteQuestion(questionId: string) {
+    //metodo nativo do javascript para abrir uma janela modal com uma mensagem. o retorno dela é um booleano
+    if (window.confirm("Você tem certeza que deseja excluir essa pergunta ?")) {
+      const questionRef = await database
+        .ref(`rooms/${roomId}/questions/${questionId}`)
+        .remove();
+    }
+  }
 
   return (
     <div id="page-room">
@@ -54,7 +66,14 @@ export function AdminRoom() {
                 key={question.id}
                 content={question.content}
                 author={question.author}
-              />
+              >
+                <button
+                  type="button"
+                  onClick={() => handleDeleteQuestion(question.id)}
+                >
+                  <img src={deleteImg} alt="Remover pergunta" />
+                </button>
+              </Question>
             );
           })}
         </div>

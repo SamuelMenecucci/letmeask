@@ -10,8 +10,20 @@
       justify-content: space-between;
       align-items: center;
 
+      // o operador > server para indicar filhos diretos
       > img {
         max-height: 45px;
+      }
+
+      > div {
+        display: flex;
+
+        //o gap é aplicado quando tem dois elementos.
+        gap: 16px;
+
+        button {
+          height: 40px;
+        }
       }
     }
   }

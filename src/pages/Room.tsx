@@ -9,6 +9,7 @@ import "../styles/room.scss";
 import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { database } from "../services/firebase";
+import { Question } from "../components/Question";
 
 //tipagem do parametro que irei pegar
 type RoomParams = {
@@ -30,7 +31,7 @@ type FirebaseQuestions = Record<
 >;
 
 //tipagem para o estado que irá armazenar a pergunta
-type Question = {
+type QuestionType = {
   id: string;
   author: {
     name: string;
@@ -53,7 +54,7 @@ export function Room() {
   const [newQuestion, setNewQuestion] = useState("");
 
   //o estado será um array de questions
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<QuestionType[]>([]);
 
   const [title, setTitle] = useState("");
 
@@ -161,8 +162,19 @@ export function Room() {
             </Button>
           </div>
         </form>
-
-        {JSON.stringify(questions)}
+        <div className="question-list">
+          {/* irei percorrer cada elemento de detro de questions e retornar um componente para cada um deles. question é um array de question, por isso a utilização do map */}
+          {questions.map((question) => {
+            return (
+              <Question
+                //Para entender melhor o motivo de utilização da propriedade key, leia a doc: https://pt-br.reactjs.org/docs/reconciliation.html
+                key={question.id}
+                content={question.content}
+                author={question.author}
+              />
+            );
+          })}
+        </div>
       </main>
     </div>
   );

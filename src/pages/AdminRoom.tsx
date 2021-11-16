@@ -5,7 +5,7 @@ import { RoomCode } from "../components/RoomCode";
 import deleteImg from "../assets/images/delete.svg";
 
 //função do router para pegar os parametros da rota
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import "../styles/room.scss";
 // import { useAuth } from "../hooks/useAuth";
 import { Question } from "../components/Question";
@@ -22,6 +22,8 @@ export function AdminRoom() {
   //trazendo o usuário autenticado
   // const { user } = useAuth();
 
+  const history = useHistory();
+
   //aonde guardo o parametro que peguei da rota da minha página. como estou passano o id da sala no parametro, irei pegar esse id com o useParams. ele está pegando o parametro com a key id pois é o parametro que passamos na rota, lá no app, utilizando o route. Ele trás a rota dentro de um objeto
   const params = useParams<RoomParams>();
 
@@ -29,6 +31,14 @@ export function AdminRoom() {
 
   //informações de dentro do hook que criei
   const { questions, title } = useRoom(roomId);
+
+  async function handleEndRoom() {
+    await database.ref(`rooms/${roomId}`).update({
+      endedAt: new Date(),
+    });
+
+    history.push("/");
+  }
 
   async function handleDeleteQuestion(questionId: string) {
     //metodo nativo do javascript para abrir uma janela modal com uma mensagem. o retorno dela é um booleano
@@ -46,7 +56,9 @@ export function AdminRoom() {
           <img src={logoImg} alt="Letmeask" />
           <div>
             <RoomCode code={params.id} />
-            <Button isOutlined>Encerrar Sala</Button>
+            <Button isOutlined onClick={handleEndRoom}>
+              Encerrar Sala
+            </Button>
           </div>
         </div>
       </header>

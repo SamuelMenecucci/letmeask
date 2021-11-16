@@ -48,6 +48,11 @@ export function Home() {
       return;
     }
 
+    if (roomRef.val().endedAt) {
+      toast.error("Room already closed.");
+      return;
+    }
+
     //passando o id da sala que existe como parametro na rota.
     history.push(`/rooms/${roomCode}`);
   }

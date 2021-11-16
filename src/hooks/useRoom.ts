@@ -28,6 +28,7 @@ type QuestionType = {
 };
 
 //criação de um hook para a reutilização de suas funcionalidades em outras partes da aplicação.
+//hook para pegar as questões existentes no banco de dados.
 export function useRoom(roomId: string) {
   //o estado será um array de questions
   const [questions, setQuestions] = useState<QuestionType[]>([]);
